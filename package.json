@@ -1,0 +1,19 @@
+{
+  "name": "angular-todo",
+  "version": "1.0.0",
+  "description": "Test Project to create To Do app using AngularJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Paul-Cheeseman/angular-todo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Paul-Cheeseman/angular-todo/issues"
+  },
+  "homepage": "https://github.com/Paul-Cheeseman/angular-todo#readme"
+}
