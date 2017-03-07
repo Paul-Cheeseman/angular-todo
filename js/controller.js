@@ -86,8 +86,9 @@ angular.module('RouteControllers', [])
                     console.log(results);                    
 
 
-	        		//Testing code to pull user data back so that ID can be populated on form after
-	        		//createing an element
+					// Code to retrieve ('get') user data after initial creation ('post') so that server generated id 
+					// will be present in $scotoscope ASAP, enabling newly created ‘todo’ item to be edited 
+					// immediately, without the need for manual internvention to refresh. 
     	    		TodoAPIService.getTodos(URL + "todo/", $scope.username, $scope.authToken).then(function(results) {
 		    	        $scope.todos = results.data || [];
                     	console.log("Retrieving:");	    	        
