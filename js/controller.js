@@ -2,16 +2,25 @@ angular.module('RouteControllers', [])
 
 
 	//****************************************************************************************
-    .controller('HomeController', function($scope) {
+    .controller('HomeController', function($scope, store) {
         $scope.title = "Welcome To Angular Todo!";
 
-        //$scope.userMsg = "test";
-	
+        //Logged in/out msg
+        if (store.get('username')) {
+            $scope.userMsg = " - User: " + store.get('username') + " currently logged in";
+        }
+
     })
 
 
 	//****************************************************************************************
     .controller('RegisterController', function($scope, $location, UserAPIService, store) {
+
+
+        //Logged in/out msg
+        if (store.get('username')) {
+            $scope.userMsg = " - User: " + store.get('username') + " currently logged in";
+        }
  
         $scope.registrationUser = {};
         var URL = "https://morning-castle-91468.herokuapp.com/";
@@ -67,6 +76,11 @@ angular.module('RouteControllers', [])
 //****************************************************************************************	
     .controller('LoginController', function($scope, $location, UserAPIService, store) {
         $scope.title = "LOGIN!";
+
+        //Logged in/out msg
+        if (store.get('username')) {
+            $scope.userMsg = " - User: " + store.get('username') + " currently logged in";
+        }
 
 
 		var URL = "https://morning-castle-91468.herokuapp.com/";
@@ -150,6 +164,11 @@ angular.module('RouteControllers', [])
 	//****************************************************************************************	
 	.controller('TodoController', function($scope, $location, TodoAPIService, store) {
         var URL = "https://morning-castle-91468.herokuapp.com/";
+
+        //Logged in/out msg
+        if (store.get('username')) {
+            $scope.userMsg = " - User: " + store.get('username') + " currently logged in";
+        }
  
  		//If the locally stored data is not rpesent, user not logged in, so direct to registration page
     	if (!store.get('authToken')) {
@@ -219,6 +238,13 @@ angular.module('RouteControllers', [])
 
 	//****************************************************************************************
 	.controller('EditTodoController', function($scope, $location, $routeParams, TodoAPIService, store) {
+        
+        //Logged in/out msg
+        if (store.get('username')) {
+            $scope.userMsg = " - User: " + store.get('username') + " currently logged in";
+        }
+
+
         var id = $routeParams.id;
         var URL = "https://morning-castle-91468.herokuapp.com/";
  
