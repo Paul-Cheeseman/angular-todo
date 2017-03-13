@@ -4,25 +4,45 @@ angular.module('RouteControllers', [])
 	//****************************************************************************************
     .controller('HomeController', function($scope) {
         $scope.title = "Welcome To Angular Todo!";
+
+        //$scope.userMsg = "test";
+	
     })
 
 
-
 	//****************************************************************************************
-    .controller('RegisterController', function($scope, UserAPIService, store) {
+    .controller('RegisterController', function($scope, $location, UserAPIService, store) {
  
         $scope.registrationUser = {};
         var URL = "https://morning-castle-91468.herokuapp.com/";
+
+
+        validate = function(){
+        	//If ghe local data is present, user logged in so redirect to their todo list
+	      	if (store.get('authToken')) {
+    	 	  		$location.path("/todo");
+    		}
+    		else{
+    			console.log("Validating - Login Error");
+    		}
+        };
+            
+
  
- 		    $scope.login = function(){
+	    $scope.login = function(){
         	UserAPIService.callAPI(URL + "accounts/api-token-auth/", $scope.data).then(function(results){
         		$scope.token = results.data.token;
                 store.set('username', $scope.registrationUser.username);
                 store.set('authToken', $scope.token);
+
+                //Function to redicrect on successful login
+                validate();
+
         	}).catch(function(err) {
         		console.log(err.data);
         	});
-        }
+        };
+
 
         $scope.submitForm = function() {
             if ($scope.registrationForm.$valid) {
@@ -31,22 +51,112 @@ angular.module('RouteControllers', [])
  
                 UserAPIService.callAPI(URL + "accounts/register/", $scope.registrationUser).then(function(results) {
                     $scope.data = results.data;
-                    alert("You have successfully registered to Angular Todo");
+                    console.log("You have successfully registered to Angular Todo");
                     $scope.login();
+
                 }).catch(function(err) {
                     alert("Oops! Something went wrong!");
                     console.log(err);
                 });
+
             }
         };
     })
 
+
+//****************************************************************************************	
+    .controller('LoginController', function($scope, $location, UserAPIService, store) {
+        $scope.title = "LOGIN!";
+
+
+		var URL = "https://morning-castle-91468.herokuapp.com/";
+
+		//creating empty object, that will be populated with login info which can then be fired off
+        $scope.loggingInUser = {};
+
+
+     	validate = function(){
+        	//If ghe local data is present, user logged in so redirect to their todo list
+     		console.log("Validate Running");
+
+	      	if (store.get('authToken')) {
+	      		$location.path("/todo");
+    		}
+    		else{
+    			console.log("Validating - Login Error");
+    		}
+        };
+
+
+		$scope.login = function(){
+        	UserAPIService.callAPI(URL + "accounts/api-token-auth/", $scope.loggingInUser).then(function(results){
+        		$scope.token = results.data.token;
+                store.set('username', $scope.loggingInUser.username);
+                store.set('authToken', $scope.token);
+
+                //Function to redicrect on successful login
+                validate();
+
+        	}).catch(function(err) {
+        		console.log(err.data);
+        	});
+        };
+
+
+		$scope.submitLoginForm = function(){
+            if ($scope.loginForm.$valid) {
+                $scope.loggingInUser.username = $scope.userLogin.username;
+                $scope.loggingInUser.password = $scope.userLogin.password;
+        		
+        		console.log($scope.loggingInUser.username);
+        		console.log($scope.loggingInUser.password);
+				
+				$scope.login();
+
+				//console.log("Calling Validate");
+				//Delay on call put in as presumably login() hadn't finished running
+				//setTimeout(validate(),2000);
+				//console.log("Finished with Validate");
+
+    		}
+
+		};
+
+    })
+
+
+    //****************************************************************************************
+	.controller('LogOutController', function($scope, store) {
+
+		if (store.get('username')){
+			$scope.userLogOutName = store.get('username');
+			$scope.logOutMsg = "You have been logged out";
+			//console.log($scope.userLogOutName);
+
+			//remove the local data
+        	$scope.authToken = store.remove('authToken');
+	        $scope.username = store.remove('username');
+		}
+		else{
+			$scope.logOutMsg = "Your not logged in, please login before logging out";
+		}
+
+
+		 
+
+    })
 
 
 	//****************************************************************************************	
 	.controller('TodoController', function($scope, $location, TodoAPIService, store) {
         var URL = "https://morning-castle-91468.herokuapp.com/";
  
+ 		//If the locally stored data is not rpesent, user not logged in, so direct to registration page
+    	if (!store.get('authToken')) {
+        	$location.path("/accounts/register");
+    	}
+
+
         $scope.authToken = store.get('authToken');
         $scope.username = store.get('username');
  
